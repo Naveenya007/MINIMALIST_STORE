@@ -3,36 +3,42 @@
         "id": 1,
         "name": "Classic White Tee",
         "price": "25.00",
-        "image": "images/product1.jpg"
+        "image": "images/product1.jpg",
+        "description": "A timeless and versatile wardrobe staple."
     },
     {
         "id": 2,
         "name": "Denim Jeans",
         "price": "75.00",
-        "image": "images/product2.jpg"
+        "image": "images/product2.jpg",
+        "description": "Comfortable and stylish for everyday wear."
     },
     {
         "id": 3,
         "name": "Leather Jacket",
         "price": "150.00",
-        "image": "images/product3.jpg"
+        "image": "images/product3.jpg",
+        "description": "A classic jacket for a cool, edgy look."
     },
     {
         "id": 4,
         "name": "Beanie Hat",
         "price": "20.00",
-        "image": "images/product4.jpg"
+        "image": "images/product4.jpg",
+        "description": "Keep warm with this stylish and cozy beanie."
     },
     {
         "id": 5,
         "name": "Sunglasses",
         "price": "45.00",
-        "image": "images/product5.jpg"
+        "image": "images/product5.jpg",
+        "description": "Protect your eyes with these modern sunglasses."
     },
     {
         "id": 6,
         "name": "Sneakers",
         "price": "90.00",
-        "image": "images/product6.jpg"
+        "image": "images/product6.jpg",
+        "description": "Comfortable and fashionable for any occasion."
     }
 ]
