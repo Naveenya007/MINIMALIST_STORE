@@ -1,44 +1,18 @@
 [
-    {
-        "id": 1,
-        "name": "Classic White Tee",
-        "price": "25.00",
-        "image": "images/product1.jpg",
-        "description": "A timeless and versatile wardrobe staple."
-    },
-    {
-        "id": 2,
-        "name": "Denim Jeans",
-        "price": "75.00",
-        "image": "images/product2.jpg",
-        "description": "Comfortable and stylish for everyday wear."
-    },
-    {
-        "id": 3,
-        "name": "Leather Jacket",
-        "price": "150.00",
-        "image": "images/product3.jpg",
-        "description": "A classic jacket for a cool, edgy look."
-    },
-    {
-        "id": 4,
-        "name": "Beanie Hat",
-        "price": "20.00",
-        "image": "images/product4.jpg",
-        "description": "Keep warm with this stylish and cozy beanie."
-    },
-    {
-        "id": 5,
-        "name": "Sunglasses",
-        "price": "45.00",
-        "image": "images/product5.jpg",
-        "description": "Protect your eyes with these modern sunglasses."
-    },
-    {
-        "id": 6,
-        "name": "Sneakers",
-        "price": "90.00",
-        "image": "images/product6.jpg",
-        "description": "Comfortable and fashionable for any occasion."
-    }
+  { "id": 1, "name": "Reusable Bottle", "price": "499", "image": "images/bottle.jpg", "description": "A clean everyday bottle for low-waste living.", "featured": 1 },
+  { "id": 2, "name": "Minimal Planner", "price": "299", "image": "images/planner.jpg", "description": "A calm paper planner for focused days.", "featured": 1 },
+  { "id": 3, "name": "Desk Organizer", "price": "899", "image": "images/organizer.jpg", "description": "Keeps essentials tidy without visual clutter.", "featured": 1 },
+  { "id": 4, "name": "Bamboo Toothbrush Set", "price": "199", "image": "images/bamboo-brush.jpg", "description": "Eco-friendly oral care for daily use.", "featured": 0 },
+  { "id": 5, "name": "Linen Cushion Cover", "price": "699", "image": "images/linen-cushion.jpg", "description": "Neutral textures that soften the room.", "featured": 0 },
+  { "id": 6, "name": "Ceramic Coffee Mug", "price": "349", "image": "images/ceramic-mug.jpg", "description": "Simple form and a comfortable grip.", "featured": 0 },
+  { "id": 7, "name": "Soy Wax Scented Candle", "price": "399", "image": "images/soy-candle.jpg", "description": "A warm scent with a clean burn.", "featured": 0 },
+  { "id": 8, "name": "Wooden Phone Stand", "price": "249", "image": "images/wood-phone-stand.jpg", "description": "A minimal stand for desks and bedside tables.", "featured": 0 },
+  { "id": 9, "name": "Cotton Tote Bag", "price": "299", "image": "images/tote-bag.jpg", "description": "A reusable bag for everyday carrying.", "featured": 0 },
+  { "id": 10, "name": "Minimal Wall Clock", "price": "1199", "image": "images/wall-clock.jpg", "description": "A quiet clock with a timeless shape.", "featured": 0 },
+  { "id": 11, "name": "Glass Storage Jars", "price": "899", "image": "images/glass-jars.jpg", "description": "A set of jars to organize pantry basics.", "featured": 0 },
+  { "id": 12, "name": "Linen Table Runner", "price": "649", "image": "images/table-runner.jpg", "description": "An understated accent for the table.", "featured": 0 },
+  { "id": 13, "name": "Ceramic Plant Pot", "price": "549", "image": "images/plant-pot.jpg", "description": "Simple planter for desks and shelves.", "featured": 0 },
+  { "id": 14, "name": "Natural Cotton Bath Towel", "price": "799", "image": "images/bath-towel.jpg", "description": "Soft, absorbent, and easy to live with.", "featured": 0 },
+  { "id": 15, "name": "Essential Oil Diffuser", "price": "1499", "image": "images/diffuser.jpg", "description": "A compact diffuser for slow evenings.", "featured": 0 },
+  { "id": 16, "name": "Minimal Desk Lamp", "price": "1299", "image": "images/desk-lamp.jpg", "description": "Task lighting with a clean silhouette.", "featured": 0 }
 ]
