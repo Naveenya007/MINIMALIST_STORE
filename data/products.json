@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "name": "Classic White Tee",
+        "price": "25.00",
+        "image": "images/product1.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Denim Jeans",
+        "price": "75.00",
+        "image": "images/product2.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Leather Jacket",
+        "price": "150.00",
+        "image": "images/product3.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Beanie Hat",
+        "price": "20.00",
+        "image": "images/product4.jpg"
+    },
+    {
+        "id": 5,
+        "name": "Sunglasses",
+        "price": "45.00",
+        "image": "images/product5.jpg"
+    },
+    {
+        "id": 6,
+        "name": "Sneakers",
+        "price": "90.00",
+        "image": "images/product6.jpg"
+    }
+]

@@ -336,8 +336,8 @@
       return;
     }
 
-    $.getJSON('api/products.php').done((response) => {
-      const products = response.products || [];
+    // Always use the JSON file for products on GitHub Pages
+    $.getJSON('data/products.json').done((products) => {
       renderProducts(products);
       renderFeatured(products);
       updateCartBadge();
@@ -345,6 +345,7 @@
       submitOrder();
       submitContact();
     }).fail(() => {
+      // Fallback if JSON is missing for some reason
       const products = fallbackProducts();
       renderProducts(products);
       renderFeatured(products);
@@ -356,58 +357,30 @@
   }
 
   function checkSession() {
-    $.ajax({
-      url: 'api/session.php',
-      method: 'GET',
-      dataType: 'json',
-      success: function(response) {
-        if (response.loggedIn && response.user) {
-          $('#user-menu').show();
-          $('#auth-menu').hide();
-        } else {
-          $('#user-menu').hide();
-          $('#auth-menu').show();
-        }
-      },
-      error: function() {
-        const session = fallbackCheckSession();
-        if (session.loggedIn && session.user) {
-          $('#user-menu').show();
-          $('#auth-menu').hide();
-        } else {
-          $('#user-menu').hide();
-          $('#auth-menu').show();
-        }
-      }
-    });
+    // Always use the local storage fallback for session on GitHub Pages
+    const session = fallbackCheckSession();
+    if (session.loggedIn && session.user) {
+      $('#user-menu').show();
+      $('#auth-menu').hide();
+    } else {
+      $('#user-menu').hide();
+      $('#auth-menu').show();
+    }
   }
 
   function authSignup(payload) {
-    return $.ajax({
-      url: 'api/signup.php',
-      method: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(payload),
-      dataType: 'json',
-    }).then((response) => response, () => fallbackSignup(payload));
+    // Always use the local storage fallback for signup on GitHub Pages
+    return Promise.resolve(fallbackSignup(payload));
   }
 
   function authLogin(payload) {
-    return $.ajax({
-      url: 'api/login.php',
-      method: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(payload),
-      dataType: 'json',
-    }).then((response) => response, () => fallbackLogin(payload));
+    // Always use the local storage fallback for login on GitHub Pages
+    return Promise.resolve(fallbackLogin(payload));
   }
 
   function authLogout() {
-    return $.ajax({
-      url: 'api/logout.php',
-      method: 'GET',
-      dataType: 'json',
-    }).then((response) => response, () => fallbackLogout());
+    // Always use the local storage fallback for logout on GitHub Pages
+    return Promise.resolve(fallbackLogout());
   }
 
   window.minimalistStoreAuth = {
