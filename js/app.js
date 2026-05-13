@@ -335,8 +335,12 @@
       return;
     }
 
-    // Always use the JSON file for products on GitHub Pages
-    $.getJSON('data/products.json').done((products) => {
+    // Always use the JSON file for products on GitHub Pages, bypassing browser cache
+    $.ajax({
+      url: 'data/products.json',
+      dataType: 'json',
+      cache: false
+    }).done((products) => {
       renderProducts(products, $('#product-grid'));
       renderFeatured(products);
       updateCartBadge();
