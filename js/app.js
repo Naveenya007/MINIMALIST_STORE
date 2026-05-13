@@ -160,13 +160,12 @@
     return encodeURIComponent(JSON.stringify(product));
   }
 
-  function renderProducts(products) {
-    const grid = $('#product-grid');
-    if (!grid.length) {
+  function renderProducts(products, container) {
+    if (!container.length) {
       return;
     }
 
-    grid.empty();
+    container.empty();
 
     products.forEach((product) => {
       const card = $('<article class="card product-card"></article>');
@@ -175,7 +174,7 @@
       card.append(`<p>${product.description}</p>`);
       card.append(`<p class="price">${currency.format(product.price)}</p>`);
       card.append(`<button type="button" class="add-to-cart" data-product="${toProductButtonData(product)}">Add to Cart</button>`);
-      grid.append(card);
+      container.append(card);
     });
   }
 
@@ -338,7 +337,7 @@
 
     // Always use the JSON file for products on GitHub Pages
     $.getJSON('data/products.json').done((products) => {
-      renderProducts(products);
+      renderProducts(products, $('#product-grid'));
       renderFeatured(products);
       updateCartBadge();
       renderCartPage();
@@ -347,7 +346,7 @@
     }).fail(() => {
       // Fallback if JSON is missing for some reason
       const products = fallbackProducts();
-      renderProducts(products);
+      renderProducts(products, $('#product-grid'));
       renderFeatured(products);
       updateCartBadge();
       renderCartPage();
