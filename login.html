@@ -74,10 +74,14 @@
 
                 window.minimalistStoreAuth.login(formData)
                     .then(function(response) {
-                        $('#login-message').html('<p class="success">✓ ' + response.message + '</p>');
-                        setTimeout(() => {
-                            window.location.href = 'products.html';
-                        }, 1500);
+                        if (response.success) {
+                            $('#login-message').html('<p class="success">✓ ' + response.message + '</p>');
+                            setTimeout(() => {
+                                window.location.href = 'products.html';
+                            }, 1500);
+                        } else {
+                            $('#login-message').html('<p class="error">✗ ' + response.message + '</p>');
+                        }
                     })
                     .catch(function(error) {
                         const message = error && error.message ? error.message : 'Login failed';
