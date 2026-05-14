@@ -242,46 +242,31 @@
     form.on('submit', function (event) {
       event.preventDefault();
 
-      const cart = readCart();
-      const payload = {
-        items: cart,
-        total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-      };
+      const session = fallbackCheckSession();
+      if (!session.loggedIn) {
+        $('#order-status').html('<p class="error">✗ Please log in first to place an order</p>');
+        return;
+      }
 
-      $.ajax({
-        url: 'api/order.php',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(payload),
-      })
-        .done((response) => {
-          $('#order-status').html('<p class="success">✓ ' + response.message + '</p>');
-          writeCart([]);
-          renderCartPage();
-          form[0].reset();
-        })
-        .fail((xhr) => {
-          const message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Unable to save the order right now.';
-          if (xhr.status === 401) {
-            $('#order-status').html('<p class="error">✗ Please log in first to place an order</p>');
-          } else {
-            $('#order-status').html('<p class="error">✗ ' + message + '</p>');
-          }
-        });
+      const cart = readCart();
+      if (!cart || cart.length === 0) {
+        $('#order-status').html('<p class="error">✗ Your cart is empty</p>');
+        return;
+      }
+
+      // Simulate successful order processing for GitHub Pages demo
+      $('#order-status').html('<p class="success">✓ Order placed successfully!</p>');
+      writeCart([]);
+      renderCartPage();
+      form[0].reset();
     });
   }
 
   function displayUserInfo() {
-    $.ajax({
-      url: 'api/session.php',
-      method: 'GET',
-      dataType: 'json',
-      success: function(response) {
-        if (response.loggedIn && response.user) {
-          $('#user-info').text('Placing order as: ' + response.user.name + ' (' + response.user.email + ')');
-        }
-      }
-    });
+    const response = fallbackCheckSession();
+    if (response.loggedIn && response.user) {
+      $('#user-info').text('Placing order as: ' + response.user.name + ' (' + response.user.email + ')');
+    }
   }
 
   function submitContact() {
@@ -293,24 +278,18 @@
     form.on('submit', function (event) {
       event.preventDefault();
 
-      $.ajax({
-        url: 'api/contact.php',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          name: $('#contact-name').val(),
-          email: $('#contact-email').val(),
-          message: $('#contact-message').val(),
-        }),
-      })
-        .done((response) => {
-          $('#contact-status').text(response.message).addClass('success');
-          form[0].reset();
-        })
-        .fail((xhr) => {
-          const message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Unable to save the message right now.';
-          $('#contact-status').text(message).removeClass('success');
-        });
+      const name = $('#contact-name').val();
+      const email = $('#contact-email').val();
+      const message = $('#contact-message').val();
+
+      if (!name || !email || !message) {
+        $('#contact-status').text('All fields are required.').removeClass('success');
+        return;
+      }
+
+      // Simulate successful contact submission for GitHub Pages demo
+      $('#contact-status').text('Message sent successfully!').addClass('success');
+      form[0].reset();
     });
   }
 
