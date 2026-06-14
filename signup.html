@@ -68,11 +68,11 @@
     <script src="js/app.js?v=2"></script>
     <script>
         $(document).ready(function() {
-            const session = window.minimalistStoreAuth.checkSession();
+        Promise.resolve(window.minimalistStoreAuth.checkSession()).then(function(session) {
             if (session.loggedIn) {
                 window.location.href = 'products.html';
-                return;
             }
+        });
 
             $('#signup-form').on('submit', function(e) {
                 e.preventDefault();

@@ -3,6 +3,7 @@
   const cartKey = 'minimalist-store-cart';
   const usersKey = 'minimalist-store-users';
   const sessionKey = 'minimalist-store-session';
+  const useBackend = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   function fallbackProducts() {
     return [
@@ -242,30 +243,69 @@
     form.on('submit', function (event) {
       event.preventDefault();
 
-      const session = fallbackCheckSession();
-      if (!session.loggedIn) {
-        $('#order-status').html('<p class="error">✗ Please log in first to place an order</p>');
-        return;
-      }
+      if (useBackend) {
+        authCheckSession().then(function(session) {
+          if (!session.loggedIn) {
+            $('#order-status').html('<p class="error">✗ Please log in first to place an order</p>');
+            return;
+          }
 
-      const cart = readCart();
-      if (!cart || cart.length === 0) {
-        $('#order-status').html('<p class="error">✗ Your cart is empty</p>');
-        return;
-      }
+          const cart = readCart();
+          if (!cart || cart.length === 0) {
+            $('#order-status').html('<p class="error">✗ Your cart is empty</p>');
+            return;
+          }
 
-      // Simulate successful order processing for GitHub Pages demo
-      $('#order-status').html('<p class="success">✓ Order placed successfully!</p>');
-      writeCart([]);
-      renderCartPage();
-      form[0].reset();
+          const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+          $.ajax({
+            url: 'api/order.php',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ items: cart, total: total })
+          }).done(function(response) {
+            $('#order-status').html('<p class="success">✓ ' + response.message + '</p>');
+            writeCart([]);
+            renderCartPage();
+            form[0].reset();
+          }).fail(function(xhr) {
+            const msg = xhr.responseJSON ? xhr.responseJSON.message : 'Order failed';
+            $('#order-status').html('<p class="error">✗ ' + msg + '</p>');
+          });
+        });
+      } else {
+        const session = fallbackCheckSession();
+        if (!session.loggedIn) {
+          $('#order-status').html('<p class="error">✗ Please log in first to place an order</p>');
+          return;
+        }
+
+        const cart = readCart();
+        if (!cart || cart.length === 0) {
+          $('#order-status').html('<p class="error">✗ Your cart is empty</p>');
+          return;
+        }
+
+        $('#order-status').html('<p class="success">✓ Order placed successfully!</p>');
+        writeCart([]);
+        renderCartPage();
+        form[0].reset();
+      }
     });
   }
 
   function displayUserInfo() {
-    const response = fallbackCheckSession();
-    if (response.loggedIn && response.user) {
-      $('#user-info').text('Placing order as: ' + response.user.name + ' (' + response.user.email + ')');
+    if (useBackend) {
+      authCheckSession().then(function(response) {
+        if (response.loggedIn && response.user) {
+          $('#user-info').text('Placing order as: ' + response.user.name + ' (' + response.user.email + ')');
+        }
+      });
+    } else {
+      const response = fallbackCheckSession();
+      if (response.loggedIn && response.user) {
+        $('#user-info').text('Placing order as: ' + response.user.name + ' (' + response.user.email + ')');
+      }
     }
   }
 
@@ -287,9 +327,23 @@
         return;
       }
 
-      // Simulate successful contact submission for GitHub Pages demo
-      $('#contact-status').text('Message sent successfully!').addClass('success');
-      form[0].reset();
+      if (useBackend) {
+        $.ajax({
+          url: 'api/contact.php',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ name, email, message })
+        }).done(function(response) {
+          $('#contact-status').text(response.message).addClass('success');
+          form[0].reset();
+        }).fail(function(xhr) {
+          const msg = xhr.responseJSON ? xhr.responseJSON.message : 'Failed to send message';
+          $('#contact-status').text(msg).removeClass('success');
+        });
+      } else {
+        $('#contact-status').text('Message sent successfully!').addClass('success');
+        form[0].reset();
+      }
     });
   }
 
@@ -314,54 +368,134 @@
       return;
     }
 
-    // Always use the JSON file for products on GitHub Pages, bypassing browser cache
-    $.ajax({
-      url: 'data/products.json',
-      dataType: 'json',
-      cache: false
-    }).done((products) => {
-      renderProducts(products, $('#product-grid'));
-      renderFeatured(products);
-      updateCartBadge();
-      renderCartPage();
-      submitOrder();
-      submitContact();
-    }).fail(() => {
-      // Fallback if JSON is missing for some reason
-      const products = fallbackProducts();
-      renderProducts(products, $('#product-grid'));
-      renderFeatured(products);
-      updateCartBadge();
-      renderCartPage();
-      submitOrder();
-      submitContact();
+    if (useBackend) {
+      $.ajax({
+        url: 'api/products.php',
+        dataType: 'json',
+        cache: false
+      }).done((response) => {
+        const products = response.products || [];
+        renderProducts(products, $('#product-grid'));
+        renderFeatured(products);
+        updateCartBadge();
+        renderCartPage();
+        submitOrder();
+        submitContact();
+      }).fail(() => {
+        const products = fallbackProducts();
+        renderProducts(products, $('#product-grid'));
+        renderFeatured(products);
+        updateCartBadge();
+        renderCartPage();
+        submitOrder();
+        submitContact();
+      });
+    } else {
+      $.ajax({
+        url: 'data/products.json',
+        dataType: 'json',
+        cache: false
+      }).done((products) => {
+        renderProducts(products, $('#product-grid'));
+        renderFeatured(products);
+        updateCartBadge();
+        renderCartPage();
+        submitOrder();
+        submitContact();
+      }).fail(() => {
+        const products = fallbackProducts();
+        renderProducts(products, $('#product-grid'));
+        renderFeatured(products);
+        updateCartBadge();
+        renderCartPage();
+        submitOrder();
+        submitContact();
+      });
+    }
+  }
+
+  function authCheckSession() {
+    return $.ajax({
+      url: 'api/session.php',
+      method: 'GET',
+      dataType: 'json'
+    }).then(function(res) {
+      return res;
+    }).catch(function() {
+      return { loggedIn: false };
     });
   }
 
   function checkSession() {
-    // Always use the local storage fallback for session on GitHub Pages
-    const session = fallbackCheckSession();
-    if (session.loggedIn && session.user) {
-      $('#user-menu').show();
-      $('#auth-menu').hide();
+    if (useBackend) {
+      authCheckSession().then(function(session) {
+        if (session.loggedIn && session.user) {
+          $('#user-menu').show();
+          $('#auth-menu').hide();
+        } else {
+          $('#user-menu').hide();
+          $('#auth-menu').show();
+        }
+      });
     } else {
-      $('#user-menu').hide();
-      $('#auth-menu').show();
+      const session = fallbackCheckSession();
+      if (session.loggedIn && session.user) {
+        $('#user-menu').show();
+        $('#auth-menu').hide();
+      } else {
+        $('#user-menu').hide();
+        $('#auth-menu').show();
+      }
     }
   }
 
   function authSignup(payload) {
-    // Always use the local storage fallback for signup on GitHub Pages
+    if (useBackend) {
+      return $.ajax({
+        url: 'api/signup.php',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(payload)
+      }).then(response => {
+        return response;
+      }).catch(xhr => {
+        if (xhr.responseJSON) return xhr.responseJSON;
+        return { success: false, message: 'Server error' };
+      });
+    }
     return Promise.resolve(fallbackSignup(payload));
   }
 
   function authLogin(payload) {
-    // Always use the local storage fallback for login on GitHub Pages
+    if (useBackend) {
+      return $.ajax({
+        url: 'api/login.php',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(payload)
+      }).then(response => {
+        return response;
+      }).catch(xhr => {
+        if (xhr.responseJSON) return xhr.responseJSON;
+        return { success: false, message: 'Server error' };
+      });
+    }
     return Promise.resolve(fallbackLogin(payload));
   }
 
   function authLogout() {
-    // Always use the local storage fallback for logout on GitHub Pages
+    if (useBackend) {
+      return $.ajax({
+        url: 'api/logout.php',
+        method: 'GET'
+      }).then(function(res) {
+        clearSession();
+        return res;
+      }).catch(function() {
+        clearSession();
+        return { success: true };
+      });
+    }
     return Promise.resolve(fallbackLogout());
   }
 
@@ -369,7 +503,9 @@
     signup: authSignup,
     login: authLogin,
     logout: authLogout,
-    checkSession: fallbackCheckSession,
+    checkSession: function() {
+      return useBackend ? authCheckSession() : fallbackCheckSession();
+    },
   };
 
   window.logout = function () {
