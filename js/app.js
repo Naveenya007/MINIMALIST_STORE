@@ -373,7 +373,7 @@
   };
 
   window.logout = function () {
-    authLogout().always(() => {
+    authLogout().finally(() => {
       window.location.href = 'login.html';
     });
     return false;

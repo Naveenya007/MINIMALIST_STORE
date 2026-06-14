@@ -80,18 +80,7 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="js/app.js?v=1"></script>
-<script>
-  function logout() {
-    $.ajax({
-      url: '/api/logout.php',
-      method: 'GET',
-      success: function() {
-        window.location.href = 'login.html';
-      }
-    });
-    return false;
-  }
-</script>
+
 
 </body>
 </html>
